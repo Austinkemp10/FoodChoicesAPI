@@ -1,3 +1,4 @@
+using FoodChoicesAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +26,7 @@ namespace FoodChoicesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<AppDB>(_ => new AppDB(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddControllers();
         }
 
@@ -46,6 +48,11 @@ namespace FoodChoicesAPI
             {
                 endpoints.MapControllers();
             });
+            using(var context = new FoodChoicesContext())
+            {
+                context.Database.EnsureCreated();
+            }
+            
         }
     }
 }

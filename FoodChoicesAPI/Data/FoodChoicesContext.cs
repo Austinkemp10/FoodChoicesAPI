@@ -14,7 +14,7 @@ namespace FoodChoicesAPI.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("server=localhost;database=foodchoices;user=root;password=root");
+            optionsBuilder.UseMySQL("server=localhost;database=foodchoices;user=root;password=4691m&j6691");
         }
 
 

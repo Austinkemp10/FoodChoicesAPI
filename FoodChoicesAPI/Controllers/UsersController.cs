@@ -67,7 +67,7 @@ namespace FoodChoicesAPI.Controllers
             result.Age = body.Age;
             result.DateCreated = body.DateCreated;
             result.Deleted = body.Deleted;
-            await result.UpdateAsync();
+            await result.UpdateAsync(id);
             return new OkObjectResult(result);
         }
 

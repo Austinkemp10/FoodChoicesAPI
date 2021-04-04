@@ -38,10 +38,10 @@ namespace FoodChoicesAPI.Models
             Id = (int)cmd.LastInsertedId;
         }
 
-        public async Task UpdateAsync()
+        public async Task UpdateAsync(int id)
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"UPDATE `foodchoices`.`users` SET `Name` = @name, `Password` = @password, `Age` = @age, `DateCreated` = @datecreated, `Deleted` = @deleted, WHERE `Id` = @id;";
+            cmd.CommandText = @"UPDATE `foodchoices`.`users` SET `Name` = @name, `Password` = @password, `Age` = @age, `DateCreated` = @datecreated, `Deleted` = @deleted WHERE `Id` = @id;";
             BindParams(cmd);
             BindId(cmd);
             await cmd.ExecuteNonQueryAsync();

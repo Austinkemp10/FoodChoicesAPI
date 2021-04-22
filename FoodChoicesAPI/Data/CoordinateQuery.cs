@@ -21,7 +21,7 @@ namespace FoodChoicesAPI.Data
         public async Task<Coordinate> FindOneAsync(int id)
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT `Id`, `RestaurantId`, `Longitude`, `Latitude` FROM `foodchoices`.`Coordinates` WHERE `Id` = @id";
+            cmd.CommandText = @"SELECT `Id`, `RestaurantId`, `Longitude`, `Latitude` FROM `foodchoices`.`Coordinates` WHERE `RestaurantId` = @id";
             cmd.Parameters.Add(new MySqlParameter
             {
                 ParameterName = "@id",

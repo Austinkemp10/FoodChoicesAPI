@@ -1,5 +1,6 @@
 ﻿using FoodChoicesAPI.Data;
 using FoodChoicesAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -60,14 +61,16 @@ namespace FoodChoicesAPI.Controllers
             await Db.Connection.OpenAsync();
             var query = new UserQuery(Db);
             var result = await query.FindOneAsync(id);
+
             if (result is null)
                 return new NotFoundResult();
+
             result.Name = body.Name;
             result.Password = body.Password;
             result.Age = body.Age;
             result.DateCreated = body.DateCreated;
             result.Deleted = body.Deleted;
-            await result.UpdateAsync();
+            await result.UpdateAsync(id);
             return new OkObjectResult(result);
         }
 

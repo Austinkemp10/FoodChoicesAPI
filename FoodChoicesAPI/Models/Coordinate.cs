@@ -8,23 +8,22 @@ using System.Threading.Tasks;
 
 namespace FoodChoicesAPI.Models
 {
-    public class Users
+    public class Coordinate
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
-        public int Age { get; set; }
-        public DateTime DateCreated { get; set; }
-        public bool Deleted { get; set; }
+        public int RestaurantId { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
+
 
         internal AppDB Db { get; set; }
 
-        public Users()
+        public Coordinate()
         {
 
         }
 
-        internal Users(AppDB db)
+        internal Coordinate(AppDB db)
         {
             Db = db;
         }
@@ -32,7 +31,7 @@ namespace FoodChoicesAPI.Models
         public async Task InsertAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO `foodchoices`.`users` (`Name`, `Password`, `Age`, `DateCreated`, `Deleted`) VALUES (@name, @password, @Age, @DateCreated, @Deleted);";
+            cmd.CommandText = @"INSERT INTO `foodchoices`.`Coordinate` (`RestaurantId`, `Longitude`, `Latitude`) VALUES (@restaurantId, @longitude, @latitude);";
             BindParams(cmd);
             await cmd.ExecuteNonQueryAsync();
             Id = (int)cmd.LastInsertedId;
@@ -41,16 +40,16 @@ namespace FoodChoicesAPI.Models
         public async Task UpdateAsync(int id)
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"UPDATE `foodchoices`.`users` SET `Name` = @name, `Password` = @password, `Age` = @age, `DateCreated` = @datecreated, `Deleted` = @deleted WHERE `Id` = @id;";
+            cmd.CommandText = @"UPDATE `foodchoices`.`Coordinate` SET `RestaurantId` = @restaurantId, `Longitude` = @longitude, `Latitude` = @latitude WHERE `Id` = @id;";
             BindParams(cmd);
             BindId(cmd);
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task DeleteAsync()
+        public async Task DeleteAsync(int id)
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"DELETE FROM `foodchoices`.`users` WHERE `Id` = @id;";
+            cmd.CommandText = @"DELETE FROM `foodchoices`.`Coordinate` WHERE `Id` = @id;";
             BindId(cmd);
             await cmd.ExecuteNonQueryAsync();
         }
@@ -72,34 +71,22 @@ namespace FoodChoicesAPI.Models
         {
             cmd.Parameters.Add(new MySqlParameter
             {
-                ParameterName = "@name",
-                DbType = DbType.String,
-                Value = Name,
-            });
-            cmd.Parameters.Add(new MySqlParameter
-            {
-                ParameterName = "@password",
-                DbType = DbType.String,
-                Value = Password,
-            });
-            cmd.Parameters.Add(new MySqlParameter
-            {
-                ParameterName = "@age",
+                ParameterName = "@restaurantId",
                 DbType = DbType.Int32,
-                Value = Age,
+                Value = RestaurantId,
             });
             cmd.Parameters.Add(new MySqlParameter
             {
-                ParameterName = "@datecreated",
-                DbType = DbType.DateTime,
-                Value = DateCreated,
+                ParameterName = "@longitude",
+                DbType = DbType.Double,
+                Value = Longitude,
             });
             cmd.Parameters.Add(new MySqlParameter
             {
-                ParameterName = "@deleted",
-                DbType = DbType.String,
-                Value = Deleted,
-            });
+                ParameterName = "@latitude",
+                DbType = DbType.Double,
+                Value = Latitude,
+            }); 
         }
     }
 }

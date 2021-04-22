@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,8 +27,16 @@ namespace FoodChoicesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Database Connection Services
             services.AddTransient<AppDB>(_ => new AppDB(Configuration["ConnectionStrings:DefaultConnection"]));
-            services.AddControllers();
+
+            services.AddDbContext<FoodChoicesContext>(options =>
+            options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+
+            //Authentication Services
+            services.AddAuthentication("OAuth");
+
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,17 +51,16 @@ namespace FoodChoicesAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
-            using(var context = new FoodChoicesContext())
-            {
-                context.Database.EnsureCreated();
-            }
-            
+
+
         }
     }
 }
